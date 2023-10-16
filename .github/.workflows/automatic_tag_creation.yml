@@ -1,0 +1,26 @@
+name: Create Tag on Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Read the VERSION file
+        id: version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+      - name: Create and push tag
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          git tag -a ${{ env.VERSION }} -m "Version ${{ env.VERSION }}"
+          git push origin ${{ env.VERSION }}
